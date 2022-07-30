@@ -1,0 +1,33 @@
+{
+  "dependencies": {
+    "colors": "^1.4.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.1",
+    "express": "^4.18.1",
+    "express-graphql": "^0.12.0",
+    "graphql": "^15.8.0",
+    "mongoose": "^6.5.0"
+  },
+  "devDependencies": {
+    "concurrently": "^7.3.0",
+    "nodemon": "^2.0.19"
+  },
+  "name": "simple-project-manager",
+  "description": "Simple project manager application with MERN stack + GraphQL",
+  "version": "1.0.0",
+  "main": "server.js",
+  "scripts": {
+    "start": "node ./server/server.js",
+    "dev": "nodemon ./server/server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rooneyrulz/simple-project-manager.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/rooneyrulz/simple-project-manager/issues"
+  },
+  "homepage": "https://github.com/rooneyrulz/simple-project-manager#readme"
+}
