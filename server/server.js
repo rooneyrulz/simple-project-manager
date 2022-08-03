@@ -6,7 +6,7 @@ const schema = require("./schema/schema")
 const cors = require("cors")
 require("colors")
 
-dotenv.config({ path: "./config/config.env" });
+dotenv.config({ path: "./config.env" });
 connectDB();
 
 const app = express();
