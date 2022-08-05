@@ -7,16 +7,15 @@ const cors = require("cors")
 require("colors")
 
 dotenv.config({ path: "./config.env" });
-connectDB();
 
 const app = express();
+connectDB(app);
 
 app.use(cors())
 app.use('/graphql', graphqlHTTP({
-    schema,
-    graphiql: process.env.NODE_ENV === 'development'
+  schema,
+  graphiql: process.env.NODE_ENV === 'development'
 }))
 
-app.listen(process.env.PORT || 3000, () => {
-  console.log(`listening on port ${process.env.PORT || 3000}`.yellow);
-});
+
+module.exports = app;
