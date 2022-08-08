@@ -1,8 +1,9 @@
 const mongoose = require("mongoose");
 
-const clientSchema = new mongoose.Schema({
+const organizationSchema = new mongoose.Schema({
   name: {
     type: String,
+    unique: true,
     trim: true,
     required: true,
   },
@@ -12,15 +13,10 @@ const clientSchema = new mongoose.Schema({
     trim: true,
     required: true,
   },
-  phone: {
+  password: {
     type: String,
-    trim: true,
     required: true,
   },
-  organizationId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Organization",
-  }
 });
 
-module.exports = mongoose.model("Client", clientSchema);
+module.exports = mongoose.model("Organization", organizationSchema);

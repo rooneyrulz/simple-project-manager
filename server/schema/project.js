@@ -34,6 +34,7 @@ const projectMutations = {
         description: { type: GraphQLNonNull(GraphQLString) },
         status: { type: GraphQLNonNull(GraphQLString) },
         clientId: { type: GraphQLNonNull(GraphQLID) },
+        organizationId: { type: GraphQLNonNull(GraphQLID) },
       },
       resolve(parent, args) {
         console.log(args);
@@ -42,6 +43,7 @@ const projectMutations = {
           description: args.description,
           status: args.status,
           clientId: args.clientId,
+          organizationId: args.organizationId,
         });
         return project.save();
       },

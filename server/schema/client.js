@@ -33,12 +33,14 @@ const clientMutations = {
         name: { type: GraphQLNonNull(GraphQLString) },
         email: { type: GraphQLNonNull(GraphQLString) },
         phone: { type: GraphQLNonNull(GraphQLString) },
+        organizationId: { type: GraphQLNonNull(GraphQLID) },
       },
       resolve(parent, args) {
         const client = new Client({
           name: args.name,
           email: args.email,
           phone: args.phone,
+          organizationId: args.organizationId
         });
         return client.save();
       },
