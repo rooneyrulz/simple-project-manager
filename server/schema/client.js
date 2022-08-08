@@ -4,22 +4,31 @@ const {
   GraphQLList,
   GraphQLNonNull,
 } = require("graphql");
+const {
+  getClients,
+  getClient,
+  saveClient,
+  removeClient,
+} = require("../services/client");
 const { ClientType } = require("./types");
-const Client = require("../models/Client");
 
 const clientQuery = {
   fields: {
     clients: {
       type: new GraphQLList(ClientType),
       resolve(parent, args) {
-        return Client.find();
+        return getClients()
+          .then((res) => res)
+          .catch((err) => new Error(err.message));
       },
     },
     client: {
       type: ClientType,
       args: { id: { type: GraphQLID } },
       resolve(parent, args) {
-        return Client.findById(args.id);
+        return getClient(args.id)
+          .then((res) => res)
+          .catch((err) => new Error(err.message));
       },
     },
   },
@@ -33,24 +42,20 @@ const clientMutations = {
         name: { type: GraphQLNonNull(GraphQLString) },
         email: { type: GraphQLNonNull(GraphQLString) },
         phone: { type: GraphQLNonNull(GraphQLString) },
-        organizationId: { type: GraphQLNonNull(GraphQLID) },
       },
-      resolve(parent, args) {
-        const client = new Client({
-          name: args.name,
-          email: args.email,
-          phone: args.phone,
-          organizationId: args.organizationId
-        });
-        return client.save();
+      resolve(parent, args, options) {
+        return saveClient(args, options)
+          .then((res) => res)
+          .catch((err) => new Error(err.message));
       },
     },
     removeClient: {
       type: ClientType,
       args: { id: { type: GraphQLNonNull(GraphQLID) } },
-      resolve(parent, args) {
-        const client = Client.findByIdAndRemove(args.id);
-        return client;
+      resolve(parent, args, options) {
+        return removeClient(args.id, options)
+          .then((res) => res)
+          .catch((err) => new Error(err.message));
       },
     },
   },

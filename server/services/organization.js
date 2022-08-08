@@ -58,10 +58,26 @@ const loginToOrganization = async (organization) => {
   }
 };
 
-const getCurrentUser = async () => {};
+const getCurrentOrganization = async (options) => {
+  const { isAuth, org } = options;
+  if (!isAuth || !org) {
+    return new Error("Unauthorized!");
+  }
+
+  try {
+    const isOrg = await Organization.findById(org.id);
+    if (!isOrg) {
+      return new Error("Unauthorized!");
+    }
+
+    return isOrg;
+  } catch (error) {
+    return error;
+  }
+};
 
 module.exports = {
   saveOrganization,
   loginToOrganization,
-  getCurrentUser,
+  getCurrentOrganization,
 };

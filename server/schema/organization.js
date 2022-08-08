@@ -3,15 +3,17 @@ const { OrganizationType, JWTResponseType } = require("./types");
 const {
   saveOrganization,
   loginToOrganization,
-  getCurrentUser
+  getCurrentOrganization,
 } = require("../services/organization");
 
 const organizationQuery = {
   fields: {
     currentOrganization: {
       type: OrganizationType,
-      resolve(parent, args) {
-        return false;
+      resolve(parent, args, options) {
+        return getCurrentOrganization(options)
+          .then((res) => res)
+          .catch((err) => new Error(err.message));
       },
     },
     authenticateOrganization: {
@@ -21,7 +23,7 @@ const organizationQuery = {
         password: { type: GraphQLNonNull(GraphQLString) },
       },
       resolve(parent, args, options) {
-        console.log(options.isAuth)
+        console.log(options.isAuth);
         return loginToOrganization(args)
           .then((res) => res)
           .catch((err) => new Error(err.message));
