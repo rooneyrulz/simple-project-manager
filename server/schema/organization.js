@@ -23,7 +23,6 @@ const organizationQuery = {
         password: { type: GraphQLNonNull(GraphQLString) },
       },
       resolve(parent, args, options) {
-        console.log(options.isAuth);
         return loginToOrganization(args)
           .then((res) => res)
           .catch((err) => new Error(err.message));

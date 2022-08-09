@@ -1,19 +1,16 @@
 const mongoose = require("mongoose");
 
-const DB_URI = process.env.MONGODB_URL || process.env.MONGODB_CLOUD_URL;
-const SERVER_PORT = process.env.PORT || 3000;
-
 // connect to the database
-const connectDB = async (server) => {
+const connectDB = async (dbURI, server, serverPort) => {
   try {
-    const conn = await mongoose.connect(DB_URI);
+    const conn = await mongoose.connect(dbURI);
     const { port, host } = conn?.connection;
     console.log(
       `database connection established on port:${port}  host:${host}`.cyan
         .underline.bold
     );
-    await server.listen(SERVER_PORT, () => {
-      console.log(`server listening on port ${SERVER_PORT}!`.yellow);
+    await server.listen(serverPort, () => {
+      console.log(`server listening on port ${serverPort}!`.yellow);
     });
   } catch (error) {
     console.error(error.message);

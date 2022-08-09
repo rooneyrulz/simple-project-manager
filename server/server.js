@@ -3,26 +3,31 @@ const dotenv = require("dotenv");
 const cors = require("cors");
 const { graphqlHTTP } = require("express-graphql");
 const connectDB = require("./config/db");
-const schema = require("./schema/schema");
-const useAuth = require("./middleware/auth")
+const schema = require("./schema");
+const useAuth = require("./middleware/auth");
 require("colors");
 
 dotenv.config({ path: "./config.env" });
 
-process.env.NODE_ENV === "production" && console.log == function () {};
+const SERVER_PORT = process.env.PORT || 3000;
+const NODE_ENV = process.env.NODE_ENV || "production";
+const DB_URI = process.env.MONGODB_URL || process.env.MONGODB_CLOUD_URL;
+
+if (NODE_ENV === "production") console.log = function () {};
 
 const app = express();
-connectDB(app);
+connectDB(DB_URI, app, SERVER_PORT);
 
-app.use(useAuth)
 app.use(cors());
+app.use(useAuth);
 
 app.use(
   "/graphql",
   graphqlHTTP({
     schema,
-    graphiql: process.env.NODE_ENV === "development",
+    graphiql: NODE_ENV === "development",
   })
 );
+
 
 module.exports = app;

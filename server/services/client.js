@@ -2,7 +2,7 @@ const Client = require("../models/Client");
 
 const getClients = async () => {
   try {
-    const clients = await Client.find();
+    const clients = await Client.find().exec();
     return clients;
   } catch (error) {
     return error;
@@ -11,7 +11,7 @@ const getClients = async () => {
 
 const getClient = async (id) => {
   try {
-    const client = await Client.findById(id);
+    const client = await Client.findById(id).exec();
     return client;
   } catch (error) {
     return error;
@@ -46,9 +46,9 @@ const removeClient = async (id, options) => {
   }
 
   try {
-    const client = await Client.findById(id);
-    if (client.organizationId !== org.id) {
-      return new Error("Access denied!");
+    const client = await Client.findById(id).exec();
+    if (!client || client?.organizationId !== org.id) {
+      return new Error("Client not found!");
     }
     return await client.remove();
   } catch (error) {

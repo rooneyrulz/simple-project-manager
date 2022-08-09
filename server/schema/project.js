@@ -4,6 +4,13 @@ const {
   GraphQLList,
   GraphQLNonNull,
 } = require("graphql");
+const {
+  getProjects,
+  getProject,
+  saveProject,
+  modifyProject,
+  deleteProject,
+} = require("../services/project");
 const { ProjectType } = require("./types");
 const Project = require("../models/Project");
 
@@ -12,14 +19,18 @@ const projectQuery = {
     projects: {
       type: new GraphQLList(ProjectType),
       resolve(parent, args) {
-        return Project.find();
+        return getProjects()
+          .then((res) => res)
+          .catch((err) => new Error(err.message));
       },
     },
     project: {
       type: ProjectType,
       args: { id: { type: GraphQLID } },
       resolve(parent, args) {
-        return Project.findById(args.id);
+        return getProject(args.id)
+          .then((res) => res)
+          .catch((err) => new Error(err.message));
       },
     },
   },
@@ -34,52 +45,32 @@ const projectMutations = {
         description: { type: GraphQLNonNull(GraphQLString) },
         status: { type: GraphQLNonNull(GraphQLString) },
         clientId: { type: GraphQLNonNull(GraphQLID) },
-        organizationId: { type: GraphQLNonNull(GraphQLID) },
       },
       resolve(parent, args) {
-        console.log(args);
-        const project = new Project({
-          name: args.name,
-          description: args.description,
-          status: args.status,
-          clientId: args.clientId,
-          organizationId: args.organizationId,
-        });
-        return project.save();
+        return saveProject(args, options)
+          .then((res) => res)
+          .catch((err) => new Error(err.message));
       },
     },
     updateProject: {
       type: ProjectType,
       args: {
         id: { type: GraphQLNonNull(GraphQLID) },
-        name: { type: GraphQLNonNull(GraphQLString) },
-        description: { type: GraphQLNonNull(GraphQLString) },
         status: { type: GraphQLNonNull(GraphQLString) },
       },
       resolve(parent, args) {
-        const { id, name, description, status } = args;
-        const project = Project.findByIdAndUpdate(
-          id,
-          {
-            $set: {
-              name,
-              description,
-              status,
-            },
-          },
-          {
-            new: true,
-          }
-        );
-        return project;
+        return modifyProject(args, options)
+          .then((res) => res)
+          .catch((err) => new Error(err.message));
       },
     },
     removeProject: {
       type: ProjectType,
       args: { id: { type: GraphQLNonNull(GraphQLID) } },
       resolve(parent, args) {
-        const project = Project.findByIdAndRemove(args.id);
-        return project;
+        return deleteProject(args.id, options)
+          .then((res) => res)
+          .catch((err) => new Error(err.message));
       },
     },
   },

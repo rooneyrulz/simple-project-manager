@@ -27,6 +27,7 @@ module.exports = (req, res, next) => {
     return next();
   }
 
+  console.log(decodedToken)
   req.isAuth = true;
   req.org = decodedToken;
   next();
