@@ -12,7 +12,6 @@ const {
   deleteProject,
 } = require("../services/project");
 const { ProjectType } = require("./types");
-const Project = require("../models/Project");
 
 const projectQuery = {
   fields: {
@@ -46,7 +45,7 @@ const projectMutations = {
         status: { type: GraphQLNonNull(GraphQLString) },
         clientId: { type: GraphQLNonNull(GraphQLID) },
       },
-      resolve(parent, args) {
+      resolve(parent, args, options) {
         return saveProject(args, options)
           .then((res) => res)
           .catch((err) => new Error(err.message));
@@ -58,7 +57,7 @@ const projectMutations = {
         id: { type: GraphQLNonNull(GraphQLID) },
         status: { type: GraphQLNonNull(GraphQLString) },
       },
-      resolve(parent, args) {
+      resolve(parent, args, options) {
         return modifyProject(args, options)
           .then((res) => res)
           .catch((err) => new Error(err.message));
@@ -67,7 +66,7 @@ const projectMutations = {
     removeProject: {
       type: ProjectType,
       args: { id: { type: GraphQLNonNull(GraphQLID) } },
-      resolve(parent, args) {
+      resolve(parent, args, options) {
         return deleteProject(args.id, options)
           .then((res) => res)
           .catch((err) => new Error(err.message));
