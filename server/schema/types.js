@@ -1,6 +1,6 @@
 const { GraphQLObjectType, GraphQLID, GraphQLString } = require("graphql");
-const Client = require("../models/Client");
-const Organization = require("../models/Organization");
+const { getClient } = require("../services/client");
+const { getOrganization } = require("../services/organization");
 
 const JWTResponseType = new GraphQLObjectType({
   name: "JWTResponse",
@@ -29,7 +29,9 @@ const ClientType = new GraphQLObjectType({
     organization: {
       type: OrganizationType,
       resolve(parent, args) {
-        return Organization.findById(parent.organizationId);
+        return getOrganization(parent.organizationId)
+          .then((res) => res)
+          .catch((err) => new Error(err.message));
       },
     },
   }),
@@ -45,13 +47,17 @@ const ProjectType = new GraphQLObjectType({
     client: {
       type: ClientType,
       resolve(parent, args) {
-        return Client.findById(parent.clientId);
+        return getClient(parent.clientId)
+          .then((res) => res)
+          .catch((err) => new Error(err.message));
       },
     },
     organization: {
       type: OrganizationType,
       resolve(parent, args) {
-        return Organization.findById(parent.organizationId);
+        return getOrganization(parent.organizationId)
+          .then((res) => res)
+          .catch((err) => new Error(err.message));
       },
     },
   }),

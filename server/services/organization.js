@@ -2,6 +2,19 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const Organization = require("../models/Organization");
 
+const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY;
+const JWT_SECRET_EXPIRATION_IN_SECONDS =
+  process.env.JWT_SECRET_EXPIRATION_IN_SECONDS;
+
+const getOrganization = async (id) => {
+  try {
+    const org = await Organization.findById(id);
+    return org;
+  } catch (error) {
+    return error;
+  }
+};
+
 const saveOrganization = async (organization) => {
   const { name, email, password } = organization;
 
@@ -18,8 +31,8 @@ const saveOrganization = async (organization) => {
       password: pwd,
     }).save();
 
-    const token = jwt.sign({ id: newOrg.id }, process.env.JWT_SECRET_KEY, {
-      expiresIn: process.env.JWT_SECRET_EXPIRATION_IN_SECONDS,
+    const token = jwt.sign({ id: newOrg.id }, JWT_SECRET_KEY, {
+      expiresIn: JWT_SECRET_EXPIRATION_IN_SECONDS,
     });
 
     return {
@@ -45,8 +58,8 @@ const loginToOrganization = async (organization) => {
       return new Error(`Invalid credentials!`);
     }
 
-    const token = jwt.sign({ id: org.id }, process.env.JWT_SECRET_KEY, {
-      expiresIn: process.env.JWT_SECRET_EXPIRATION_IN_SECONDS,
+    const token = jwt.sign({ id: org.id }, JWT_SECRET_KEY, {
+      expiresIn: JWT_SECRET_EXPIRATION_IN_SECONDS,
     });
 
     return {
@@ -77,6 +90,7 @@ const getCurrentOrganization = async (options) => {
 };
 
 module.exports = {
+  getOrganization,
   saveOrganization,
   loginToOrganization,
   getCurrentOrganization,
