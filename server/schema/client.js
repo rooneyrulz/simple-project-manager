@@ -16,19 +16,23 @@ const clientQuery = {
   fields: {
     clients: {
       type: new GraphQLList(ClientType),
-      resolve(parent, args) {
-        return getClients()
-          .then((res) => res)
-          .catch((err) => new Error(err.message));
+      async resolve(parent, args) {
+        try {
+          return await getClients();
+        } catch (err) {
+          return new Error(err.message);
+        }
       },
     },
     client: {
       type: ClientType,
       args: { id: { type: GraphQLID } },
-      resolve(parent, args) {
-        return getClient(args.id)
-          .then((res) => res)
-          .catch((err) => new Error(err.message));
+      async resolve(parent, args) {
+        try {
+          return await getClient(args.id);
+        } catch (err) {
+          return new Error(err.message);
+        }
       },
     },
   },
@@ -43,19 +47,23 @@ const clientMutations = {
         email: { type: GraphQLNonNull(GraphQLString) },
         phone: { type: GraphQLNonNull(GraphQLString) },
       },
-      resolve(parent, args, options) {
-        return saveClient(args, options)
-          .then((res) => res)
-          .catch((err) => new Error(err.message));
+      async resolve(parent, args, options) {
+        try {
+          return await saveClient(args, options);
+        } catch (err) {
+          return new Error(err.message);
+        }
       },
     },
     removeClient: {
       type: ClientType,
       args: { id: { type: GraphQLNonNull(GraphQLID) } },
-      resolve(parent, args, options) {
-        return removeClient(args.id, options)
-          .then((res) => res)
-          .catch((err) => new Error(err.message));
+      async resolve(parent, args, options) {
+        try {
+          return await removeClient(args.id, options);
+        } catch (err) {
+          return new Error(err.message);
+        }
       },
     },
   },

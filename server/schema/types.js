@@ -46,18 +46,22 @@ const ProjectType = new GraphQLObjectType({
     status: { type: GraphQLString },
     client: {
       type: ClientType,
-      resolve(parent, args) {
-        return getClient(parent.clientId)
-          .then((res) => res)
-          .catch((err) => new Error(err.message));
+      async resolve(parent, args) {
+        try {
+          return await getClient(parent.clientId);
+        } catch (err) {
+          return new Error(err.message);
+        }
       },
     },
     organization: {
       type: OrganizationType,
-      resolve(parent, args) {
-        return getOrganization(parent.organizationId)
-          .then((res) => res)
-          .catch((err) => new Error(err.message));
+      async resolve(parent, args) {
+        try {
+          return await getOrganization(parent.organizationId);
+        } catch (err) {
+          return new Error(err.message);
+        }
       },
     },
   }),

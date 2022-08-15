@@ -17,19 +17,23 @@ const projectQuery = {
   fields: {
     projects: {
       type: new GraphQLList(ProjectType),
-      resolve(parent, args) {
-        return getProjects()
-          .then((res) => res)
-          .catch((err) => new Error(err.message));
+      async resolve(parent, args) {
+        try {
+          return await getProjects();
+        } catch (err) {
+          return new Error(err.message);
+        }
       },
     },
     project: {
       type: ProjectType,
       args: { id: { type: GraphQLID } },
-      resolve(parent, args) {
-        return getProject(args.id)
-          .then((res) => res)
-          .catch((err) => new Error(err.message));
+      async resolve(parent, args) {
+        try {
+          return await getProject(args.id);
+        } catch (err) {
+          return new Error(err.message);
+        }
       },
     },
   },
@@ -45,10 +49,12 @@ const projectMutations = {
         status: { type: GraphQLNonNull(GraphQLString) },
         clientId: { type: GraphQLNonNull(GraphQLID) },
       },
-      resolve(parent, args, options) {
-        return saveProject(args, options)
-          .then((res) => res)
-          .catch((err) => new Error(err.message));
+      async resolve(parent, args, options) {
+        try {
+          return await saveProject(args, options);
+        } catch (err) {
+          return new Error(err.message);
+        }
       },
     },
     updateProject: {
@@ -57,19 +63,23 @@ const projectMutations = {
         id: { type: GraphQLNonNull(GraphQLID) },
         status: { type: GraphQLNonNull(GraphQLString) },
       },
-      resolve(parent, args, options) {
-        return modifyProject(args, options)
-          .then((res) => res)
-          .catch((err) => new Error(err.message));
+      async resolve(parent, args, options) {
+        try {
+          return await modifyProject(args, options);
+        } catch (err) {
+          return new Error(err.message);
+        }
       },
     },
     removeProject: {
       type: ProjectType,
       args: { id: { type: GraphQLNonNull(GraphQLID) } },
-      resolve(parent, args, options) {
-        return deleteProject(args.id, options)
-          .then((res) => res)
-          .catch((err) => new Error(err.message));
+      async resolve(parent, args, options) {
+        try {
+          return await deleteProject(args.id, options);
+        } catch (err) {
+          return new Error(err.message);
+        }
       },
     },
   },

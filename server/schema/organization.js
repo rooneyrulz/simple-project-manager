@@ -10,10 +10,12 @@ const organizationQuery = {
   fields: {
     currentOrganization: {
       type: OrganizationType,
-      resolve(parent, args, options) {
-        return getCurrentOrganization(options)
-          .then((res) => res)
-          .catch((err) => new Error(err.message));
+      async resolve(parent, args, options) {
+        try {
+          return await getCurrentOrganization(options);
+        } catch (err) {
+          return new Error(err.message);
+        }
       },
     },
     authenticateOrganization: {
@@ -22,10 +24,12 @@ const organizationQuery = {
         email: { type: GraphQLNonNull(GraphQLString) },
         password: { type: GraphQLNonNull(GraphQLString) },
       },
-      resolve(parent, args, options) {
-        return loginToOrganization(args)
-          .then((res) => res)
-          .catch((err) => new Error(err.message));
+      async resolve(parent, args, options) {
+        try {
+          return await loginToOrganization(args);
+        } catch (err) {
+          return new Error(err.message);
+        }
       },
     },
   },
@@ -40,10 +44,12 @@ const organizationMutations = {
         email: { type: GraphQLNonNull(GraphQLString) },
         password: { type: GraphQLNonNull(GraphQLString) },
       },
-      resolve(parent, args) {
-        return saveOrganization(args)
-          .then((res) => res)
-          .catch((err) => new Error(err.message));
+      async resolve(parent, args) {
+        try {
+          return await saveOrganization(args);
+        } catch (err) {
+          return new Error(err.message);
+        }
       },
     },
   },
