@@ -23,14 +23,14 @@ const saveOrganization = async (organization) => {
       return new Error(`Organization ${email} already exists`);
     }
 
-    const pwd = await bcryptPassword(password, 12);
+    const pwd = await bcryptPassword(password);
     const newOrg = await new Organization({
       name,
       email,
       password: pwd,
     }).save();
 
-    const token = generateToken({ id: newOrg.id });
+    const token = generateToken({ id: newOrg.id, type: "REGISTRATION_TOKEN" });
 
     return {
       token,
@@ -55,7 +55,7 @@ const loginToOrganization = async (organization) => {
       return new Error(`Invalid credentials!`);
     }
 
-    const token = generateToken({ id: newOrg.id });
+    const token = generateToken({ id: org.id, type: "AUTHENTICATION_TOKEN" });
 
     return {
       token,
@@ -68,6 +68,7 @@ const loginToOrganization = async (organization) => {
 
 const getCurrentOrganization = async (options) => {
   const { isAuth, org } = options;
+  console.log({isAuth, org})
   if (!isAuth || !org) {
     return new Error("Unauthorized!");
   }
